@@ -20,7 +20,7 @@ UPDATE scores
 SET "wins" = "wins" + 1 
 WHERE "player_id" = '1';
 
-SELECT "name" FROM players WHERE "id" = '1';
+SELECT "id", "name" FROM players WHERE "name" = 'Jared';
 
 SELECT "wins" FROM scores WHERE "player_id" = '1';
 
