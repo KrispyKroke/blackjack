@@ -104,13 +104,22 @@ def play(balance):
             dealer_hand.append(deck.pop())
             if x == 0:
                 print('Dealer card drawn: {}'.format(dealer_hand[x]))
-        if is_natural_player and is_natural_dealer:
+        player_total = calculate_player_hand(player_hand)
+        dealer_total = calculate_dealer_hand(dealer_hand)
+        if player_total == 21:
+            is_natural_player = True
+        if dealer_total == 21:
+            is_natural_dealer = True
+        if is_natural_dealer and is_natural_player:
             print('Draw!')
             balance += bet
-            is_natural_player = False
-            is_natural_dealer = False
             continue
-        player_total = calculate_player_hand(player_hand)
+        elif is_natural_player:
+            print('Blackjack!')
+            balance += (bet * 2.5)
+            continue
+        else:
+            pass
         while player_total <= 21:
             player_total = calculate_player_hand(player_hand)
             print('Your current score: {}'.format(player_total))
@@ -120,15 +129,22 @@ def play(balance):
             else:
                 pass
             turn_decision = ''
-            while not is_natural_player and not turn_decision == 'hit' and not turn_decision == 'pass':
-                    turn_decision = input('Do you want to hit or pass? ')
+            while not turn_decision == 'hit' and not turn_decision == 'pass' and not turn_decision == 'double-down':
+                    turn_decision = input('Do you want to hit, pass, or double-down? ')
             if turn_decision == 'pass':
+                break
+            elif turn_decision == 'double-down':
+                player_total = calculate_player_hand(continue_playing(player_hand))
+                if balance >= bet * 2:
+                    balance -= bet 
+                    bet = bet * 2
+                else:
+                    bet = bet + balance
+                    balance = 0
                 break
             else: 
                 player_total = calculate_player_hand(continue_playing(player_hand))
         dealer_total = calculate_dealer_hand(dealer_hand)
-        if dealer_total == 21:
-            is_natural_dealer = True
         while dealer_total < 17:
             dealer_total = calculate_dealer_hand(dealer_draw(dealer_hand))
         game_result = determine_winner(player_total, dealer_total)
